@@ -11,9 +11,27 @@ import {
 import { SignOut } from "@phosphor-icons/react/dist/ssr/SignOut";
 import { PlusCircle } from "@phosphor-icons/react/dist/ssr/PlusCircle";
 import Link from "next/link";
-import { Movie } from "@/types";
+import { Movie } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export default async function Home() {
+  async function deleteMovie(id: string) {
+    "use server";
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/movies/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete movie");
+    }
+
+    revalidatePath("/");
+  }
+
   const movies: Movie[] = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL}/api/movies`
   ).then((res) => res.json());
@@ -36,7 +54,7 @@ export default async function Home() {
         </div>
         <div className="grid grid-cols-4 gap-4">
           {movies.map((movie) => (
-            <MovieCard movie={movie} key={movie.title} />
+            <MovieCard movie={movie} key={movie.id} onDelete={deleteMovie} />
           ))}
         </div>
         <Pagination>

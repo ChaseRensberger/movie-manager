@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import {
   ContextMenu,
@@ -7,15 +9,15 @@ import {
 } from "@/components/ui/context-menu";
 import Link from "next/link";
 import Image from "next/image";
+import { Movie } from "@prisma/client";
 
-interface Movie {
-  id: string;
-  title: string;
-  year: string;
-  image: string;
-}
-
-export default function MovieCard({ movie }: { movie: Movie }) {
+export default function MovieCard({
+  movie,
+  onDelete,
+}: {
+  movie: Movie;
+  onDelete: (id: string) => void;
+}) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -42,7 +44,9 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         <ContextMenuItem asChild>
           <Link href={`/edit/${movie.id}`}>Edit</Link>
         </ContextMenuItem>
-        <ContextMenuItem>Delete</ContextMenuItem>
+        <ContextMenuItem onClick={() => onDelete(movie.id)}>
+          Delete
+        </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
   );

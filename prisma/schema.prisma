@@ -13,7 +13,7 @@ datasource db {
 model Movie {
   id    String @id @default(cuid())
   title String
-  year  String
+  year  Int
   image String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
