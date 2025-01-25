@@ -10,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { SignOut, PlusCircle } from "@phosphor-icons/react";
+import Link from "next/link";
 
 const movies = [
   {
@@ -60,8 +61,10 @@ export default function Home() {
       <div className="flex items-center justify-between w-full">
         <span className="flex items-center">
           <h2 className="text-4xl font-bold">My movies</h2>
-          <Button className="mt-1" variant="ghost">
-            <PlusCircle size={32} />
+          <Button className="mt-1" variant="ghost" asChild>
+            <Link href="/create">
+              <PlusCircle size={32} />
+            </Link>
           </Button>
         </span>
         <Button className="flex items-center gap-2" variant="ghost">
@@ -69,8 +72,10 @@ export default function Home() {
           <SignOut size={32} />
         </Button>
       </div>
-      <div className="">
-        <MovieCard movie={movies[0]} key={movies[0].title} />
+      <div className="grid grid-cols-4 gap-4">
+        {movies.map((movie) => (
+          <MovieCard movie={movie} key={movie.title} />
+        ))}
       </div>
       <Pagination>
         <PaginationContent>
