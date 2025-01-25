@@ -15,6 +15,21 @@ model Movie {
   title String
   year  Int
   image String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  userId String
+  user User @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id       String    @id @default(cuid())
+  email    String    @unique
+  password String
+  movies   Movie[]
+  session  Session?
+}
+
+model Session {
+  token     String   @unique
+  expiresAt DateTime
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
 }

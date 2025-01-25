@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/utils";
 
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const movie = await prisma.movie.findUnique({
+    where: { id: params.id },
+  });
+  return NextResponse.json(movie);
+}
+
 export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
