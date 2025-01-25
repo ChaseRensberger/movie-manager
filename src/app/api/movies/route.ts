@@ -1,57 +1,34 @@
 import { NextResponse } from "next/server";
-import { Movie } from "@/types";
+import { PrismaClient } from "@prisma/client";
 
-const movies: Movie[] = [
-  {
-    id: "1",
-    title: "Movie 1",
-    year: "2021",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "2",
-    title: "Movie 2",
-    year: "2022",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "3",
-    title: "Movie 3",
-    year: "2023",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "4",
-    title: "Movie 4",
-    year: "2024",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "5",
-    title: "Movie 5",
-    year: "2025",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "6",
-    title: "Movie 6",
-    year: "2026",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "7",
-    title: "Movie 7",
-    year: "2027",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "8",
-    title: "Movie 8",
-    year: "2028",
-    image: "/sample.jpeg",
-  },
-];
+const prisma = new PrismaClient();
 
 export async function GET() {
+  const movies = await prisma.movie.findMany();
   return NextResponse.json(movies);
+}
+
+export async function POST(request: Request) {
+  const movie = await request.json();
+  const newMovie = await prisma.movie.create({ data: movie });
+  return NextResponse.json(newMovie);
+}
+
+export async function DELETE(request: Request) {
+  const movie = await request.json();
+  const deletedMovie = await prisma.movie.delete({ where: { id: movie.id } });
+  return NextResponse.json(deletedMovie);
+}
+
+export async function PATCH(request: Request) {
+  const movie = await request.json();
+  const updatedMovie = await prisma.movie.update({
+    where: { id: movie.id },
+    data: {
+      title: movie.title,
+      year: movie.year,
+      image: movie.image,
+    },
+  });
+  return NextResponse.json(updatedMovie);
 }
