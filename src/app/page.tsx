@@ -1,4 +1,3 @@
-"use client";
 import MovieCard from "@/components/movie-card";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,61 +8,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { SignOut, PlusCircle } from "@phosphor-icons/react";
+import { SignOut } from "@phosphor-icons/react/dist/ssr/SignOut";
+import { PlusCircle } from "@phosphor-icons/react/dist/ssr/PlusCircle";
 import Link from "next/link";
+import { Movie } from "@/types";
 
-const movies = [
-  {
-    id: "1",
-    title: "Movie 1",
-    year: "2021",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "2",
-    title: "Movie 2",
-    year: "2022",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "3",
-    title: "Movie 3",
-    year: "2023",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "4",
-    title: "Movie 4",
-    year: "2024",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "5",
-    title: "Movie 5",
-    year: "2025",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "6",
-    title: "Movie 6",
-    year: "2026",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "7",
-    title: "Movie 7",
-    year: "2027",
-    image: "/sample.jpeg",
-  },
-  {
-    id: "8",
-    title: "Movie 8",
-    year: "2028",
-    image: "/sample.jpeg",
-  },
-];
-
-export default function Home() {
+export default async function Home() {
+  const movies: Movie[] = await fetch(
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/movies`
+  ).then((res) => res.json());
   if (movies.length > 0) {
     return (
       <main className="min-h-screen flex flex-col gap-12 justify-between items-center p-12">
