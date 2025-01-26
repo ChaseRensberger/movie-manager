@@ -8,12 +8,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { SignOut } from "@phosphor-icons/react/dist/ssr/SignOut";
 import { PlusCircle } from "@phosphor-icons/react/dist/ssr/PlusCircle";
 import Link from "next/link";
 import { Movie } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import SignoutButton from "@/components/signout-button";
 
 export default async function Home() {
   async function deleteMovie(id: string) {
@@ -63,10 +63,7 @@ export default async function Home() {
               </Link>
             </Button>
           </span>
-          <Button className="flex items-center gap-2" variant="ghost">
-            Logout
-            <SignOut size={32} />
-          </Button>
+          <SignoutButton />
         </div>
         <div className="grid grid-cols-4 gap-4">
           {movies.map((movie) => (

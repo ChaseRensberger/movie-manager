@@ -16,6 +16,8 @@ export default function EditMovie() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (!params.movieId) {
       return;
     }
@@ -23,10 +25,16 @@ export default function EditMovie() {
     fetch(`/api/movies/${params.movieId}`)
       .then((res) => res.json())
       .then((movie) => {
-        setTitle(movie.title);
-        setYear(movie.year);
-        setImage(movie.image);
+        if (isSubscribed) {
+          setTitle(movie.title);
+          setYear(movie.year);
+          setImage(movie.image);
+        }
       });
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [params.movieId]);
 
   const handleSubmit = async () => {

@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
 export default function SignIn() {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,7 +25,8 @@ export default function SignIn() {
     if (response.ok) {
       router.push("/");
     } else {
-      console.error("Signin failed");
+      const error = await response.json();
+      setError(error.message || "Failed to sign in");
     }
   }
 
@@ -58,6 +60,7 @@ export default function SignIn() {
             Sign up
           </Link>
         </p>
+        {error && <p className="text-red-500">{error}</p>}
       </form>
     </main>
   );
