@@ -81,7 +81,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen flex flex-col gap-8 justify-center items-center p-12">
-      <h2>No movies found</h2>
+      <h2>Your movie list is empty</h2>
       <Button asChild>
         <Link href="/create">Add a new movie</Link>
       </Button>
