@@ -1,4 +1,5 @@
 import { randomBytes, scryptSync } from "crypto";
+import { prisma } from "./utils";
 
 export type FormState =
   | {
@@ -30,4 +31,15 @@ export function verifyPassword(
   const [salt, storedHash] = hashedPassword.split(":");
   const hashToCheck = scryptSync(password, salt, 64).toString("hex");
   return hashToCheck === storedHash;
+}
+
+export async function getUserFromSession(sessionToken: string) {
+  const session = await prisma.session.findUnique({
+    where: { token: sessionToken },
+    include: { user: true },
+  });
+  if (!session || new Date() > session.expiresAt) {
+    return null;
+  }
+  return session.user;
 }

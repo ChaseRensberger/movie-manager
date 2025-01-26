@@ -13,15 +13,25 @@ import { PlusCircle } from "@phosphor-icons/react/dist/ssr/PlusCircle";
 import Link from "next/link";
 import { Movie } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export default async function Home() {
   async function deleteMovie(id: string) {
     "use server";
 
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get("session")?.value;
+    if (!sessionToken) {
+      throw new Error("No session token");
+    }
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/movies/${id}`,
       {
         method: "DELETE",
+        headers: {
+          Cookie: `session=${sessionToken}`,
+        },
       }
     );
 
@@ -32,8 +42,14 @@ export default async function Home() {
     revalidatePath("/");
   }
 
+  const cookieStore = await cookies();
   const movies: Movie[] = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/movies`
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/movies`,
+    {
+      headers: {
+        Cookie: `session=${cookieStore.get("session")?.value}`,
+      },
+    }
   ).then((res) => res.json());
   if (movies.length > 0) {
     return (
