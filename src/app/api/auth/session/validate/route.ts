@@ -3,7 +3,12 @@ import { prisma } from "@/lib/utils";
 import { z } from "zod";
 
 const SessionValidateSchema = z.object({
-  token: z.string().min(1, { message: "Session token is required" }),
+  token: z
+    .object({
+      name: z.string(),
+      value: z.string(),
+    })
+    .transform((token) => token.value),
 });
 
 export async function POST(request: Request) {
