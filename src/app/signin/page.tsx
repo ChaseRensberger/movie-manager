@@ -35,8 +35,13 @@ export default function SignIn() {
         onSubmit={handleSubmit}
       >
         <h1 className="text-2xl">Sign In</h1>
-        <Input placeholder="Email" />
-        <Input placeholder="Password" />
+        <Input type="email" name="email" placeholder="Email" required />
+        <Input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
         <div className="flex items-center gap-2">
           <Checkbox id="remember" />
           <label
