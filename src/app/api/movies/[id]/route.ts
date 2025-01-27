@@ -1,12 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { getUserFromSession } from "@/lib/auth";
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get("session")?.value;
   if (!sessionToken) {
@@ -19,15 +20,16 @@ export async function GET(
   }
 
   const movie = await prisma.movie.findUnique({
-    where: { id: params.id, userId: user.id },
+    where: { id, userId: user.id },
   });
   return NextResponse.json(movie);
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get("session")?.value;
   if (!sessionToken) {
@@ -42,13 +44,14 @@ export async function DELETE(
   try {
     const movie = await prisma.movie.delete({
       where: {
-        id: params.id,
+        id,
         userId: user.id,
       },
     });
 
     return NextResponse.json(movie);
   } catch (error) {
+    console.error("Error deleting movie:", error);
     return NextResponse.json(
       { error: "Failed to delete movie" },
       { status: 500 }
@@ -57,9 +60,10 @@ export async function DELETE(
 }
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get("session")?.value;
   if (!sessionToken) {
@@ -73,7 +77,7 @@ export async function PATCH(
 
   const movie = await request.json();
   const updatedMovie = await prisma.movie.update({
-    where: { id: params.id, userId: user.id },
+    where: { id, userId: user.id },
     data: {
       title: movie.title,
       year: movie.year,

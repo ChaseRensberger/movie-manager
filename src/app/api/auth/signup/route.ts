@@ -40,10 +40,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const hashedPassword = saltAndHashPassword(password);
 
-    const { user, sessionToken } = await prisma.$transaction(async (tx) => {
+    // Could be helpful to return user here later on
+    const { sessionToken } = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
           email,
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
         },
       });
 
-      return { user, sessionToken: session.token };
+      return { sessionToken: session.token };
     });
 
     cookieStore.set("session", sessionToken, {

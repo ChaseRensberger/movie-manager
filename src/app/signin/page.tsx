@@ -55,7 +55,7 @@ export default function SignIn() {
         </div>
         <Button className="w-full">Sign In</Button>
         <p>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-blue-500">
             Sign up
           </Link>
